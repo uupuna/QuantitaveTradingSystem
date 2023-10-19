@@ -8,4 +8,7 @@ enum class Signal {
 class SimpleMovingAverageStrategy {
 public:
     Signal generateSignal(const std::vector<float>& data);
+
+private:
+    float calculateSMA(const std::vector<float>& data, int days) const;
 };

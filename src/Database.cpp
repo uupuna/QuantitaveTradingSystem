@@ -90,3 +90,30 @@ void Database::insertTradeData(const std::string& ticker, const std::string& act
     }
     sqlite3_finalize(stmt);
 }
+
+std::vector<Database::TradeRecord> Database::getRecentTrades(int limit) {
+    const char* sql = "SELECT Ticker, Action, Price, Quantity, Timestamp FROM Trades ORDER BY Timestamp DESC LIMIT ?;";
+    sqlite3_stmt* stmt;
+    std::vector<TradeRecord> trades;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        throw std::runtime_error("Failed to prepare SQL statement");
+    }
+
+    sqlite3_bind_int(stmt, 1, limit);
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        TradeRecord trade;
+        trade.ticker = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        trade.action = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        trade.price = sqlite3_column_double(stmt, 2);
+        trade.quantity = sqlite3_column_int(stmt, 3);
+        trade.timestamp = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+        trades.push_back(trade);
+    }
+    sqlite3_finalize(stmt);
+
+    return trades;
+}
+
