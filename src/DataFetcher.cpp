@@ -3,14 +3,35 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
 
+std::string DataFetcher::getAPIKeyFromConfig() {
+    std::ifstream configFile("../../config.txt");
+    if (!configFile) {
+        throw std::runtime_error("Unable to open config.txt");
+    }
+    
+    std::string line;
+    while (getline(configFile, line)) {
+        std::size_t pos = line.find("ALPHAVANTAGE_API_KEY=");
+        if (pos != std::string::npos) {
+            return line.substr(pos + 20);  // 20 is the length of "ALPHAVANTAGE_API_KEY="
+        }
+    }
+
+    throw std::runtime_error("API key not found in config.txt");
+}
+
+
+
 std::vector<float> DataFetcher::getHistoricalData(const std::string& symbol) {
-    std::string apiKey = "JTLWBH5VKOUNIOV3"; 
+    std::string apiKey = getAPIKeyFromConfig();
     std::string endpoint = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + apiKey;
 
     std::string jsonData = fetchData(endpoint);
 
     return parseData(jsonData);
 }
+
+
 
 std::string DataFetcher::fetchData(const std::string& url) {
     CURL* curl = curl_easy_init();

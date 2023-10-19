@@ -1,9 +1,9 @@
 #include "TradeExecutor.h"
 #include <iostream>
 
-// Constructor definition
+
 TradeExecutor::TradeExecutor(Database& db) : m_db(db) {
-    // Any other initialization code if necessary
+    
 }
 
 TradeExecutor::TradeResult TradeExecutor::executeTrade(const std::string& ticker, float price, int quantity, bool isBuy) {

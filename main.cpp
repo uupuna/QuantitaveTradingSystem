@@ -15,7 +15,7 @@ int main() {
         TradeExecutor executor(db);
         PerformanceEvaluator evaluator;
 
-        std::string ticker = "AAPL";  // For simplicity, using hardcoded ticker.
+        std::string ticker = "AAPL";
 
         auto data = dataFetcher.getHistoricalData(ticker);
         Signal signal = strategy.generateSignal(data);
