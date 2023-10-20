@@ -1,26 +1,3 @@
-# cmake_minimum_required(VERSION 3.10)
-# project(QuantitativeTradingSystem)
-
-# set(CMAKE_CXX_STANDARD 17)
-
-# include_directories(include)
-
-# include_directories("C:/Program Files (x86)/sqlite3")
-# link_directories("C:/Program Files (x86)/sqlite3")
-
-# add_executable(QuantitativeTradingSystem
-#     main.cpp
-#     src/DataFetcher.cpp
-#     src/Database.cpp
-#     src/SimpleMovingAverageStrategy.cpp
-#     src/TradeExecutor.cpp
-#     src/PerformanceEvaluator.cpp
-# )
-
-# target_link_libraries(QuantitativeTradingSystem PRIVATE sqlite3.dll)
-
-
-# set(CMAKE_PREFIX_PATH "E:/vcpkg/installed/x86-windows" ${CMAKE_PREFIX_PATH})
 set(CMAKE_TOOLCHAIN_FILE "E:/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 
 cmake_minimum_required(VERSION 3.10)
@@ -50,12 +27,17 @@ add_executable(QuantitativeTradingSystem
 target_link_libraries(QuantitativeTradingSystem PRIVATE sqlite3)
 link_directories(${CMAKE_BINARY_DIR}/Debug)
 
-
 find_package(CURL CONFIG REQUIRED)
-
-
 target_link_libraries(QuantitativeTradingSystem PRIVATE CURL::libcurl)
-
 
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(QuantitativeTradingSystem PRIVATE nlohmann_json::nlohmann_json)
+
+
+# set(mlpack_DIR "E:/vcpkg/installed/x64-windows/share/mlpack")
+# find_package(mlpack CONFIG REQUIRED)
+# target_link_libraries(QuantitativeTradingSystem PRIVATE mlpack::mlpack)
+
+
+find_path(MLPACK_INCLUDE_DIRS "mlpack/mlpack.hpp")
+include_directories(${MLPACK_INCLUDE_DIRS})
